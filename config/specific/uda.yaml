@@ -1,0 +1,4 @@
+
+UDARegCriterion:
+  name: mse # kl
+  weight: 5.0

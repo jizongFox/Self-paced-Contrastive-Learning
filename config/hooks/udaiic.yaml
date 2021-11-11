@@ -1,0 +1,6 @@
+DiscreteMIConsistencyParams:
+  feature_names: [ "Conv5", "Up_conv3", "Up_conv2" ]
+  mi_weights: [ 0.1, 0.05, 0.05 ]
+  dense_paddings: null
+  consistency_weight: 1
+

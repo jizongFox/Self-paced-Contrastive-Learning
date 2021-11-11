@@ -1,0 +1,98 @@
+#!/bin/bash
+base_folder=/home/jizong/Workspace/Contrast-You/semi_seg/runs/cedar/0503/
+save_dir=cedar/0503_semi
+max_epoch=1
+num_batches=2
+rand_seed=10
+comm_cmd=" --on-local "
+
+source ./_run_semi "${save_dir}/semi" "${comm_cmd}" "${rand_seed}" "${num_batches}" "${max_epoch}"
+
+run_semi_on_checkpoint() {
+  run_baseline $1 yes $2
+  run_mt $1 yes $2
+  run_infonce $1 yes $2
+  run_infonce $1 null $2
+  run_mt_infonce $1 yes $2
+  run_udaiic $1 yes $2
+}
+
+# partition self
+rand_seed=10
+run_semi_on_checkpoint ${base_folder}/random_seed_10/sample_num_10/global_Conv5_1.0/contrast_on_partition/self-paced/method_soft/loss_params*5.0_60.0/type_inversesquare \
+  contrast_on_parition/self
+
+rand_seed=20
+run_semi_on_checkpoint ${base_folder}/random_seed_20/sample_num_10/global_Conv5_1.0/contrast_on_partition/self-paced/method_soft/loss_params*5.0_60.0/type_inversesquare \
+  contrast_on_parition/self
+
+rand_seed=30
+run_semi_on_checkpoint ${base_folder}/random_seed_30/sample_num_10/global_Conv5_1.0/contrast_on_partition/self-paced/method_soft/loss_params*5.0_60.0/type_inversesquare \
+  contrast_on_parition/self
+
+# info
+rand_seed=10
+run_semi_on_checkpoint ${base_folder}/random_seed_10/sample_num_10/global_Conv5_1.0/contrast_on_partition/infonce \
+  contrast_on_parition/infonce
+
+rand_seed=20
+run_semi_on_checkpoint ${base_folder}/random_seed_20/sample_num_10/global_Conv5_1.0/contrast_on_partition/infonce \
+  contrast_on_parition/infonce
+
+rand_seed=30
+run_semi_on_checkpoint ${base_folder}/random_seed_30/sample_num_10/global_Conv5_1.0/contrast_on_partition/infonce \
+  contrast_on_parition/infonce
+
+
+# patient self
+rand_seed=10
+run_semi_on_checkpoint ${base_folder}/random_seed_10/sample_num_10/global_Conv5_1.0/contrast_on_patient/self-paced/method_soft/loss_params*3.5_50.0/type_inversesquare  \
+  contrast_on_patient/self
+
+rand_seed=10
+run_semi_on_checkpoint ${base_folder}/random_seed_20/sample_num_10/global_Conv5_1.0/contrast_on_patient/self-paced/method_soft/loss_params*3.5_50.0/type_inversesquare  \
+  contrast_on_patient/self
+
+rand_seed=30
+run_semi_on_checkpoint ${base_folder}/random_seed_30/sample_num_10/global_Conv5_1.0/contrast_on_patient/self-paced/method_soft/loss_params*3.5_50.0/type_inversesquare  \
+  contrast_on_patient/self
+
+# info
+rand_seed=10
+run_semi_on_checkpoint ${base_folder}/random_seed_10/sample_num_10/global_Conv5_1.0/contrast_on_patient/infonce \
+  contrast_on_patient/infonce
+
+rand_seed=20
+run_semi_on_checkpoint ${base_folder}/random_seed_20/sample_num_10/global_Conv5_1.0/contrast_on_patient/infonce \
+  contrast_on_patient/infonce
+
+rand_seed=30
+run_semi_on_checkpoint ${base_folder}/random_seed_30/sample_num_10/global_Conv5_1.0/contrast_on_patient/infonce \
+  contrast_on_patient/infonce
+
+# cycle self
+rand_seed=10
+run_semi_on_checkpoint ${base_folder}/random_seed_10/sample_num_10/global_Conv5_1.0/contrast_on_cycle/self-paced/method_soft/loss_params*5.0_50.0/type_inversesquare  \
+  contrast_on_cycle/self
+
+rand_seed=20
+run_semi_on_checkpoint ${base_folder}/random_seed_20/sample_num_10/global_Conv5_1.0/contrast_on_cycle/self-paced/method_soft/loss_params*5.0_50.0/type_inversesquare  \
+  contrast_on_cycle/self
+
+rand_seed=30
+run_semi_on_checkpoint ${base_folder}/random_seed_30/sample_num_10/global_Conv5_1.0/contrast_on_cycle/self-paced/method_soft/loss_params*5.0_50.0/type_inversesquare  \
+  contrast_on_cycle/self
+
+# info
+rand_seed=10
+run_semi_on_checkpoint ${base_folder}/random_seed_10/sample_num_10/global_Conv5_1.0/contrast_on_cycle/infonce \
+  contrast_on_cycle/infonce
+
+rand_seed=20
+run_semi_on_checkpoint ${base_folder}/random_seed_20/sample_num_10/global_Conv5_1.0/contrast_on_cycle/infonce \
+  contrast_on_cycle/infonce
+
+rand_seed=30
+run_semi_on_checkpoint ${base_folder}/random_seed_30/sample_num_10/global_Conv5_1.0/contrast_on_cycle/infonce \
+  contrast_on_cycle/infonce
+

@@ -1,0 +1,24 @@
+# this file is for infonce with the interface of `main_infonce.py`
+Optim:
+  pre_lr: null
+  ft_lr: null
+
+ProjectorParams:
+  GlobalParams:
+    feature_names: [ Conv5, ]
+    feature_importance: [ 1 ]
+
+
+  LossParams:
+    contrast_on: [ partition ]
+    temperature: 0.07
+    type: linear
+    begin_value: 10000
+    end_value: 10000
+    weight_update: hard
+
+  Weight: 0.1
+
+Trainer:
+  pre_max_epoch: null
+  ft_max_epoch: null

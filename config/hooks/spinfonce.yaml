@@ -1,0 +1,9 @@
+SPInfonceParams:
+  feature_names: Conv5
+  weights: 1
+  contrast_ons: partition
+  begin_values: 10000
+  end_values: 10000
+  mode: soft
+  p: 0.5
+  correct_grad: true

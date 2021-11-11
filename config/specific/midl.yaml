@@ -1,0 +1,6 @@
+
+MIDLPaperParameters:
+  iic_weight: 0.1
+  padding: 1
+  patch_size: 1024
+

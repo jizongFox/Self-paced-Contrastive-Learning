@@ -1,0 +1,94 @@
+#!/bin/bash
+cd ../
+# dataset part
+
+max_epoch=80
+num_batches=250
+seed=10
+
+save_dir=test_mixup
+
+save_dir=${save_dir}/"seed_${seed}"
+#baseline
+export PYTHONOPTIMIZE=1
+#export LOGURU_LEVEL=TRACE
+
+function run_acdc_baseline {
+
+  python main.py RandomSeed=${seed} Data.name=acdc Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=1 Trainer.save_dir=${save_dir}/acdc/baseline/labeled_data_1_scan/ Trainer.name=ft
+  python main.py RandomSeed=${seed} Data.name=acdc Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=2 Trainer.save_dir=${save_dir}/acdc/baseline/labeled_data_2_scan/ Trainer.name=ft
+  python main.py RandomSeed=${seed} Data.name=acdc Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=4 Trainer.save_dir=${save_dir}/acdc/baseline/labeled_data_4_scan/ Trainer.name=ft
+
+}
+
+function run_acdc_mixup {
+  weight=$1
+  bn=$2
+
+  python main_mixup.py RandomSeed=${seed} Data.name=acdc Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=1 Trainer.save_dir=${save_dir}/acdc/mixup/labeled_data_1_scan/w_${weight}/bn_${bn} MixUpParams.weight=${weight} MixUpParams.enable_bn=${bn} --opt-path config/hooks/mixup.yaml
+  python main_mixup.py RandomSeed=${seed} Data.name=acdc Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=2 Trainer.save_dir=${save_dir}/acdc/mixup/labeled_data_2_scan/w_${weight}/bn_${bn} MixUpParams.weight=${weight} MixUpParams.enable_bn=${bn} --opt-path config/hooks/mixup.yaml
+  python main_mixup.py RandomSeed=${seed} Data.name=acdc Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=4 Trainer.save_dir=${save_dir}/acdc/mixup/labeled_data_4_scan/w_${weight}/bn_${bn} MixUpParams.weight=${weight} MixUpParams.enable_bn=${bn} --opt-path config/hooks/mixup.yaml
+
+}
+
+function run_prostate_baseline {
+
+  python main.py RandomSeed=${seed} Data.name=prostate Arch.num_classes=2 Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=3 Trainer.save_dir=${save_dir}/prostate/baseline/labeled_data_3_scan/ Trainer.name=ft
+  python main.py RandomSeed=${seed} Data.name=prostate Arch.num_classes=2 Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=5 Trainer.save_dir=${save_dir}/prostate/baseline/labeled_data_5_scan/ Trainer.name=ft
+  python main.py RandomSeed=${seed} Data.name=prostate Arch.num_classes=2 Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=7 Trainer.save_dir=${save_dir}/prostate/baseline/labeled_data_7_scan/ Trainer.name=ft
+
+}
+function run_prostate_mixup {
+  weight=$1
+  bn=$2
+
+  python main_mixup.py RandomSeed=${seed} Data.name=prostate Arch.num_classes=2 Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=3 Trainer.save_dir=${save_dir}/prostate/mixup/labeled_data_3_scan/w_${weight}/bn_${bn} MixUpParams.weight=${weight} MixUpParams.enable_bn=${bn} --opt-path config/hooks/mixup.yaml
+  python main_mixup.py RandomSeed=${seed} Data.name=prostate Arch.num_classes=2 Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=5 Trainer.save_dir=${save_dir}/prostate/mixup/labeled_data_5_scan/w_${weight}/bn_${bn} MixUpParams.weight=${weight} MixUpParams.enable_bn=${bn} --opt-path config/hooks/mixup.yaml
+  python main_mixup.py RandomSeed=${seed} Data.name=prostate Arch.num_classes=2 Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=7 Trainer.save_dir=${save_dir}/prostate/mixup/labeled_data_7_scan/w_${weight}/bn_${bn} MixUpParams.weight=${weight} MixUpParams.enable_bn=${bn} --opt-path config/hooks/mixup.yaml
+
+}
+
+function run_mmwhs_baseline {
+
+  python main.py RandomSeed=${seed} Data.name=mmwhsct Arch.num_classes=5 Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=1 Trainer.save_dir=${save_dir}/mmwhsct/baseline/labeled_data_1_scan/ Trainer.name=ft
+  python main.py RandomSeed=${seed} Data.name=mmwhsct Arch.num_classes=5 Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=2 Trainer.save_dir=${save_dir}/mmwhsct/baseline/labeled_data_2_scan/ Trainer.name=ft
+
+}
+
+function run_mmwhs_mixup {
+  weight=$1
+  bn=$2
+  python main_mixup.py RandomSeed=${seed} Data.name=mmwhsct Arch.num_classes=5 Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=1 Trainer.save_dir=${save_dir}/mmwhsct/mixup/labeled_data_1_scan/w_${weight}/bn_${bn} MixUpParams.weight=${weight} MixUpParams.enable_bn=${bn} --opt-path config/hooks/mixup.yaml
+  python main_mixup.py RandomSeed=${seed} Data.name=mmwhsct Arch.num_classes=5 Trainer.max_epoch=${max_epoch} Trainer.num_batches=${num_batches} Data.labeled_scan_num=2 Trainer.save_dir=${save_dir}/mmwhsct/mixup/labeled_data_2_scan/w_${weight}/bn_${bn} MixUpParams.weight=${weight} MixUpParams.enable_bn=${bn} --opt-path config/hooks/mixup.yaml
+}
+
+#run_acdc_baseline
+#run_acdc_mixup 0 true
+#run_acdc_mixup 0 false
+
+#run_prostate_baseline
+#run_prostate_mixup 0.01 true
+#run_prostate_mixup 0.01 false
+#
+#run_prostate_mixup 0.05 true
+#run_prostate_mixup 0.05 false
+#
+#run_prostate_mixup 0.1 true
+#run_prostate_mixup 0.1 false
+#
+#run_prostate_mixup 0.2 true
+#run_prostate_mixup 0.2 false
+
+
+run_mmwhs_baseline
+run_mmwhs_mixup 0.01 true
+run_mmwhs_mixup 0.01 false
+
+run_mmwhs_mixup 0.05 true
+run_mmwhs_mixup 0.05 false
+
+run_mmwhs_mixup 0.1 true
+run_mmwhs_mixup 0.1 false
+
+run_mmwhs_mixup 0.2 true
+run_mmwhs_mixup 0.2 false

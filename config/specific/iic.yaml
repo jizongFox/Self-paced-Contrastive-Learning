@@ -1,0 +1,25 @@
+FeatureExtractor:
+  feature_names: [ Conv5,  ]
+  feature_importance: [ 1,  ]
+
+IICRegParameters:
+  EncoderParams:
+    num_clusters: 20
+    num_subheads: 5
+    head_types: linear
+    normalize: false
+    temperature: 1.0
+
+  DecoderParams:
+    num_clusters: 20
+    num_subheads: 5
+    head_types: linear
+    normalize: false
+    temperature: 1.0
+
+  LossParams:
+    paddings: [  ]
+    patch_sizes: 1024
+
+  weight: 0.1
+  enforce_matching: false

@@ -1,0 +1,47 @@
+#!/bin/bash
+set -e
+export CUBLAS_WORKSPACE_CONFIG=:4096:8
+export PYTHONOPTIMIZE=1
+
+num_batches=300
+max_epoch=80
+pre_lr=0.0000005
+ft_lr=0.0000002
+save_dir=refactorize
+
+python pretrain_main.py Trainer.save_dir=${save_dir}/baseline Trainer.pre_max_epoch=0 Trainer.num_batches=${num_batches} \
+  Trainer.ft_max_epoch=${max_epoch} Optim.pre_lr=${pre_lr} Optim.ft_lr=${ft_lr} \
+  --opt-path config/pretrain.yaml
+
+python pretrain_main.py Trainer.save_dir=${save_dir}/infonce Trainer.num_batches=${num_batches} \
+  Trainer.max_epoch=${max_epoch} Optim.pre_lr=${pre_lr} Optim.ft_lr=${ft_lr} \
+  --opt-path config/pretrain.yaml config/hooks/infonce.yaml
+
+python pretrain_main.py Trainer.save_dir=${save_dir}/spinfonce/cg_true Trainer.num_batches=${num_batches} \
+  Trainer.max_epoch=${max_epoch} Optim.pre_lr=${pre_lr} Optim.ft_lr=${ft_lr} \
+  SPInfonceParams.begin_values=3.0 SPInfonceParams.end_values=70 SPInfonceParams.correct_grad=true \
+  --opt-path config/pretrain.yaml config/hooks/spinfonce.yaml
+
+python pretrain_main.py Trainer.save_dir=${save_dir}/spinfonce/cg_fale Trainer.num_batches=${num_batches} \
+  Trainer.max_epoch=${max_epoch} Optim.pre_lr=${pre_lr} Optim.ft_lr=${ft_lr} \
+  SPInfonceParams.begin_values=3.0 SPInfonceParams.end_values=70 SPInfonceParams.correct_grad=false \
+  --opt-path config/pretrain.yaml config/hooks/spinfonce.yaml
+
+#ckpt=Arch.checkpoint=runs2/infonce/last.pth
+#
+#python main.py Trainer.save_dir=infonce Trainer.name=pretrain Trainer.num_batches=${num_batches} \
+#  Arch.max_channel=512 Trainer.max_epoch=${max_epoch} Optim.lr=${pre_lr} --opt-path config/pretrain.yaml
+#
+#python main.py ${ckpt} Trainer.save_dir=infonce/tra/scan_1 Data.labeled_data_ratio=0.01 Trainer.name=ft \
+#  Trainer.num_batches=${num_batches} Arch.max_channel=512 Trainer.max_epoch=${max_epoch} Optim.lr=${ft_lr}
+#
+#python main.py ${ckpt} Trainer.save_dir=infonce/tra/scan_174 Data.labeled_data_ratio=1.0 Trainer.name=ft \
+#  Trainer.num_batches=${num_batches} Arch.max_channel=512 Trainer.max_epoch=${max_epoch} Optim.lr=${ft_lr}
+#
+#ckpt=""
+#
+#python main.py ${ckpt} Trainer.save_dir=baseline/tra/scan_1 Data.labeled_data_ratio=0.01 Trainer.name=ft \
+#  Trainer.num_batches=${num_batches} Arch.max_channel=512 Trainer.max_epoch=${max_epoch} Optim.lr=${ft_lr}
+#
+#python main.py ${ckpt} Trainer.save_dir=baseline/tra/scan_174 Data.labeled_data_ratio=1.0 Trainer.name=ft \
+#  Trainer.num_batches=${num_batches} Arch.max_channel=512 Trainer.max_epoch=${max_epoch} Optim.lr=${ft_lr}

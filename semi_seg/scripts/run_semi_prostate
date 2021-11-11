@@ -1,0 +1,71 @@
+#!/bin/bash
+base_folder=/home/jizong/scratch/Contrast-You/semi_seg/runs/0507
+save_dir=0507_semi
+max_epoch=80
+num_batches=250
+rand_seed=10
+dataset=prostate_md
+comm_cmd="  -n ${dataset} "
+
+source ./_run_semi "${save_dir}/semi" "${comm_cmd}" "${rand_seed}" "${num_batches}" "${max_epoch}"
+
+run_semi_on_checkpoint() {
+  run_baseline $1 yes $2
+  run_mt $1 yes $2
+  run_infonce $1 yes $2
+  run_infonce $1 null $2
+  run_mt_infonce $1 yes $2
+  run_udaiic $1 yes $2
+}
+
+# partition self
+rand_seed=10
+run_semi_on_checkpoint ${base_folder}/githash_89d0f51/prostate_md/random_seed_10/sample_num_5/global_Conv5_1.0/contrast_on_partition/self-paced/method_soft/loss_params*5.0_50.0/type_inversesquare \
+  contrast_on_parition/self
+
+rand_seed=20
+run_semi_on_checkpoint ${base_folder}/githash_89d0f51/prostate_md/random_seed_20/sample_num_5/global_Conv5_1.0/contrast_on_partition/self-paced/method_soft/loss_params*5.0_50.0/type_inversesquare \
+  contrast_on_parition/self
+
+rand_seed=30
+run_semi_on_checkpoint ${base_folder}/githash_89d0f51/prostate_md/random_seed_30/sample_num_5/global_Conv5_1.0/contrast_on_partition/self-paced/method_soft/loss_params*5.0_50.0/type_inversesquare \
+  contrast_on_parition/self
+
+# info
+rand_seed=10
+run_semi_on_checkpoint ${base_folder}/githash_89d0f51/prostate_md/random_seed_10/sample_num_5/global_Conv5_1.0/contrast_on_partition/infonce \
+  contrast_on_parition/infonce
+
+rand_seed=20
+run_semi_on_checkpoint ${base_folder}/githash_89d0f51/prostate_md/random_seed_20/sample_num_5/global_Conv5_1.0/contrast_on_partition/infonce \
+  contrast_on_parition/infonce
+
+rand_seed=30
+run_semi_on_checkpoint ${base_folder}/githash_89d0f51/prostate_md/random_seed_30/sample_num_5/global_Conv5_1.0/contrast_on_partition/infonce \
+  contrast_on_parition/infonce
+
+# patient self
+rand_seed=10
+run_semi_on_checkpoint ${base_folder}/githash_89d0f51/prostate_md/random_seed_10/sample_num_5/global_Conv5_1.0/contrast_on_patient/self-paced/method_soft/loss_params*2.5_60.0/type_inversesquare \
+  contrast_on_patient/self
+
+rand_seed=10
+run_semi_on_checkpoint ${base_folder}/githash_89d0f51/prostate_md/random_seed_20/sample_num_5/global_Conv5_1.0/contrast_on_patient/self-paced/method_soft/loss_params*2.5_60.0/type_inversesquare \
+  contrast_on_patient/self
+
+rand_seed=30
+run_semi_on_checkpoint ${base_folder}/githash_89d0f51/prostate_md/random_seed_30/sample_num_5/global_Conv5_1.0/contrast_on_patient/self-paced/method_soft/loss_params*2.5_60.0/type_inversesquare \
+  contrast_on_patient/self
+
+# info
+rand_seed=10
+run_semi_on_checkpoint ${base_folder}/githash_89d0f51/prostate_md/random_seed_10/sample_num_5/global_Conv5_1.0/contrast_on_patient/infonce \
+  contrast_on_parition/infonce
+
+rand_seed=20
+run_semi_on_checkpoint ${base_folder}/githash_89d0f51/prostate_md/random_seed_20/sample_num_5/global_Conv5_1.0/contrast_on_patient/infonce \
+  contrast_on_parition/infonce
+
+rand_seed=30
+run_semi_on_checkpoint ${base_folder}/githash_89d0f51/prostate_md/random_seed_30/sample_num_5/global_Conv5_1.0/contrast_on_patient/infonce \
+  contrast_on_parition/infonce

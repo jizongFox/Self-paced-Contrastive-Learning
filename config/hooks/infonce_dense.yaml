@@ -1,0 +1,9 @@
+InfonceParams:
+  feature_names: Up_conv3
+  weights: 1.0
+  contrast_ons: null
+
+ContrastiveLoaderParams:
+  scan_sample_num: 3
+  partition_sample_num: 1
+  num_workers: 8

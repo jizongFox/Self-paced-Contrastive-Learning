@@ -1,0 +1,105 @@
+#!/bin/bash
+
+rand_seed=10
+save_dir=0507
+group_num=5
+num_batches=250
+pre_max_epoch=100
+ft_max_epoch=80
+dataset=prostate_md
+comm_cmd=" -n ${dataset} "
+
+source ./_run_semi "${save_dir}" "${comm_cmd}" "${rand_seed}" "${num_batches}" "${ft_max_epoch}"
+
+function run_null_checkpoint {
+  run_mt "" null ""
+  run_udaiic "" null ""
+  run_entropy "" null ""
+}
+
+function run_baseline {
+  set -e pipefail
+  python run_infonce_pretrain.py ${comm_cmd} --save_dir ${save_dir} -b ${num_batches} -s ${rand_seed} --time=2 \
+    baseline -e ${ft_max_epoch}
+}
+
+function run_neurips {
+  ###### multitask
+  python run_infonce_pretrain.py ${comm_cmd} --save_dir ${save_dir} -b ${num_batches} -s ${rand_seed} --time=4 \
+    infonce --global_features Conv5 --global_importance 1 --contrast_on partition -g=${group_num} \
+    -pe ${pre_max_epoch} -fe ${ft_max_epoch}
+  #
+  python run_infonce_pretrain.py ${comm_cmd} --save_dir ${save_dir} -b ${num_batches} -s ${rand_seed} --time=4 \
+    infonce --global_features Conv5 --global_importance 1 --contrast_on patient -g=${group_num} \
+    -pe ${pre_max_epoch} -fe ${ft_max_epoch}
+
+  python run_infonce_pretrain.py ${comm_cmd} --save_dir ${save_dir} -b ${num_batches} -s ${rand_seed} --time=4 \
+    infonce --global_features Conv5 --global_importance 1 --contrast_on self -g=${group_num} \
+    -pe ${pre_max_epoch} -fe ${ft_max_epoch}
+}
+
+function run_selfpaced {
+  python run_infonce_pretrain.py ${comm_cmd} --save_dir ${save_dir} -b ${num_batches} -s ${rand_seed} --time=4 \
+    selfpaced --global_features Conv5 --global_importance 1 --contrast_on partition -g=${group_num} \
+    -pe ${pre_max_epoch} -fe ${ft_max_epoch} --begin_value $1 --end_value $2 --method $3 --scheduler_type=$4
+
+  python run_infonce_pretrain.py ${comm_cmd} --save_dir ${save_dir} -b ${num_batches} -s ${rand_seed} --time=4 \
+    selfpaced --global_features Conv5 --global_importance 1 --contrast_on patient -g=${group_num} \
+    -pe ${pre_max_epoch} -fe ${ft_max_epoch} --begin_value $1 --end_value $2 --method $3 --scheduler_type=$4
+
+}
+
+# baseline
+run_baseline
+
+# neurips baseline
+run_neurips
+
+# other semi baseline
+run_null_checkpoint
+
+# soft
+run_selfpaced 5 50 soft inversesquare
+run_selfpaced 5 60 soft inversesquare
+run_selfpaced 5 70 soft inversesquare
+run_selfpaced 5 80 soft inversesquare
+
+run_selfpaced 4.5 50 soft inversesquare
+run_selfpaced 4.5 60 soft inversesquare
+run_selfpaced 4.5 70 soft inversesquare
+run_selfpaced 4.5 80 soft inversesquare
+
+run_selfpaced 4 50 soft inversesquare
+run_selfpaced 4 60 soft inversesquare
+run_selfpaced 4 70 soft inversesquare
+run_selfpaced 4 80 soft inversesquare
+
+run_selfpaced 3.5 50 soft inversesquare
+run_selfpaced 3.5 60 soft inversesquare
+run_selfpaced 3.5 70 soft inversesquare
+run_selfpaced 3.5 80 soft inversesquare
+
+run_selfpaced 3 50 soft inversesquare
+run_selfpaced 3 60 soft inversesquare
+run_selfpaced 3 70 soft inversesquare
+run_selfpaced 3 80 soft inversesquare
+
+run_selfpaced 2.5 50 soft inversesquare
+run_selfpaced 2.5 60 soft inversesquare
+run_selfpaced 2.5 70 soft inversesquare
+run_selfpaced 2.5 80 soft inversesquare
+
+run_selfpaced 2 50 soft inversesquare
+run_selfpaced 2 60 soft inversesquare
+run_selfpaced 2 70 soft inversesquare
+run_selfpaced 2 80 soft inversesquare
+
+run_selfpaced 1.5 50 soft inversesquare
+run_selfpaced 1.5 60 soft inversesquare
+run_selfpaced 1.5 70 soft inversesquare
+run_selfpaced 1.5 80 soft inversesquare
+
+run_selfpaced 1 50 soft inversesquare
+run_selfpaced 1 60 soft inversesquare
+run_selfpaced 1 70 soft inversesquare
+run_selfpaced 1 80 soft inversesquare

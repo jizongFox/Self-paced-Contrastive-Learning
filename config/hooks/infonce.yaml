@@ -1,0 +1,5 @@
+InfonceParams:
+  feature_names: Conv5
+  weights: 1
+  contrast_ons: partition
+

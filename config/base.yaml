@@ -1,0 +1,41 @@
+RandomSeed: 10
+trainer_checkpoint: null
+
+Arch:
+  input_dim: 1
+  num_classes: 4
+  checkpoint: null
+  max_channel: 256
+  momentum: 0.1
+
+Optim:
+  name: RAdam
+  lr: 0.0000001
+  weight_decay: 0.00001
+
+Scheduler:
+  multiplier: 300
+  warmup_max: 10
+
+Data:
+  name: acdc
+  labeled_scan_num: 1
+
+LabeledLoader:
+  shuffle: true
+  batch_size: 5
+  num_workers: 5
+
+UnlabeledLoader:
+  shuffle: true
+  batch_size: 5
+  num_workers: 5
+
+Trainer:
+  save_dir: tmp
+  device: cuda
+  num_batches: 200
+  max_epoch: 75
+  two_stage: false
+  disable_bn: false
+  name: null

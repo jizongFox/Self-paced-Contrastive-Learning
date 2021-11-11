@@ -1,0 +1,22 @@
+Optim:
+  pre_lr: null
+  ft_lr: null
+
+Trainer:
+  pre_max_epoch: null
+  ft_max_epoch: null
+
+ProjectorParams:
+  GlobalParams:
+    feature_names: [ Conv5, ]
+    feature_importance: [ 1 ]
+
+  LossParams:
+    contrast_on: [ partition ]
+    temperature: 0.07
+    begin_value: 3
+    end_value: 14
+    weight_update: hard
+    type: inversesquare
+
+  Weight: 0.1

@@ -1,0 +1,17 @@
+Trainer:
+  num_batches: 200
+  max_epoch: 75
+
+Optim:
+  name: RAdam
+  lr: 0.0000001
+  weight_decay: 0.00001
+
+Scheduler:
+  multiplier: 400
+  warmup_max: 10
+
+ContrastiveLoaderParams:
+  scan_sample_num: 10
+  partition_sample_num: 1
+  num_workers: 8

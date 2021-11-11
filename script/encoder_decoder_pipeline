@@ -1,0 +1,8 @@
+#!/bin/bash
+python script_generator_neurips.py -n acdc -s 0531 encoder
+python script_generator_neurips.py -n prostate -s 0531 encoder
+python script_generator_neurips.py -n mmwhsct -s 0531 encoder
+
+python script_generator_neurips.py -n acdc -s 0531 decoder
+python script_generator_neurips.py -n prostate -s 0531 decoder
+python script_generator_neurips.py -n mmwhsct -s 0531 decoder
